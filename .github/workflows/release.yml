@@ -5,12 +5,12 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:  # 添加手动触发事件
+  workflow_dispatch:
     inputs:
       tag_name:
         description: 'Version tag for the release'
         required: false
-        default: ''  # 默认为空，也可以设置一个默认值
+        default: ''
 
 jobs:
   build:
@@ -36,8 +36,8 @@ jobs:
         run: zip -r obsidian_local_images_plus_pro_latest.zip ./obsidian_local_images_plus_pro_latest
       - name: Extract version
         run: |
-          tag_name=${{ github.event.inputs.tag_name }}  # 使用手动输入的 tag_name
-          if [ -z "$tag_name" ]; then  # 如果没有手动输入，则从 manifest.json 提取
+          tag_name=${{ github.event.inputs.tag_name }}
+          if [ -z "$tag_name" ]; then
             tag_name=$(grep -Po '"version"\s*:\s*"\K[^"]+' manifest.json)
           fi
           echo "tag_name=$tag_name" >> $GITHUB_ENV
@@ -52,8 +52,8 @@ jobs:
           release_name: ${{ env.tag_name }}
           draft: false
           prerelease: false
-      - name: Upload Release Assets
-        id: upload-assets
+      - name: Upload Release Asset (zip file)
+        id: upload-assets-zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,8 +62,8 @@ jobs:
           asset_path: ./obsidian_local_images_plus_pro_latest.zip
           asset_name: obsidian_local_images_plus_pro_latest-${{ env.tag_name }}.zip
           asset_content_type: application/zip
-      - name: Upload Release Assets
-        id: upload-assets
+      - name: Upload Release Asset (styles.css)
+        id: upload-assets-css
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -72,8 +72,8 @@ jobs:
           asset_path: ./styles.css
           asset_name: styles.css
           asset_content_type: text/css
-      - name: Upload Release Assets
-        id: upload-assets
+      - name: Upload Release Asset (manifest.json)
+        id: upload-assets-manifest
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -82,8 +82,8 @@ jobs:
           asset_path: ./manifest.json
           asset_name: manifest.json
           asset_content_type: application/json
-      - name: Upload Release Assets
-        id: upload-assets
+      - name: Upload Release Asset (main.js)
+        id: upload-assets-js
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
