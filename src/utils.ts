@@ -264,12 +264,13 @@ export async function readFromDisk(file: string): Promise<ArrayBuffer> {
   }
 }
 
-export async function downloadImage(url: string): Promise<ArrayBuffer> {
+export async function downloadImage(url: string, referer: string): Promise<ArrayBuffer> {
 
   logError("Downloading: " + url, false);
   const headers = {
     'method': 'GET',
-    'User-Agent': USER_AGENT
+    'User-Agent': USER_AGENT,
+    'Referer': referer
   }
 
   try {

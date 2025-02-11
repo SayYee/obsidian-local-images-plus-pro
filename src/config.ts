@@ -1,4 +1,4 @@
-export const APP_TITLE = "Local Images Plus  0.16.3";
+export const APP_TITLE = "Local Images Plus Pro 0.16.3";
 
 
 
@@ -85,7 +85,8 @@ export interface ISettings {
   PngToJpegLocal: boolean;
   JpegQuality: number;
   DoNotCreateObsFolder: boolean;
-  DateFormat: string
+  DateFormat: string;
+  HttpReferer: string
 }
 
 export const DEFAULT_SETTINGS: ISettings = {
@@ -113,5 +114,6 @@ export const DEFAULT_SETTINGS: ISettings = {
   PngToJpegLocal: true,
   JpegQuality: 80,
   DoNotCreateObsFolder: false,
-  DateFormat: "YYYY MM DD"
+  DateFormat: "YYYY MM DD",
+  HttpReferer: ""
 };

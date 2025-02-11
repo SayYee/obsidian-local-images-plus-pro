@@ -56,7 +56,7 @@ export default class SettingTab extends PluginSettingTab {
         containerEl.createEl("h1", { text: APP_TITLE })
 
         const donheader = containerEl.createEl("div")
-       // donheader.createEl("a", { text: "Support the project! ", href: "https://www.buymeacoffee.com/sergeikorneev", cls: "donheader_txt" })
+        // donheader.createEl("a", { text: "Support the project! ", href: "https://www.buymeacoffee.com/sergeikorneev", cls: "donheader_txt" })
 
         containerEl.createEl("h3", { text: "Interface settings" })
 
@@ -210,7 +210,7 @@ export default class SettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings()
                     })
             )
-            new Setting(containerEl)
+        new Setting(containerEl)
             .setName("Convert PNG to JPEG (Web Images)")
             .setDesc("Convert all downloaded PNG files to JPEG. May reduce file size by several times, but can also affect performance.")
             .addToggle((toggle) =>
@@ -222,7 +222,7 @@ export default class SettingTab extends PluginSettingTab {
                     })
             )
 
-            new Setting(containerEl)
+        new Setting(containerEl)
             .setName("Convert PNG to JPEG (Pasted Images)")
             .setDesc("Convert all pasted PNG files to JPEG. May reduce file size by several times, but can also affect performance.")
             .addToggle((toggle) =>
@@ -235,7 +235,7 @@ export default class SettingTab extends PluginSettingTab {
             )
 
 
-            new Setting(containerEl)
+        new Setting(containerEl)
             .setName("Jpeg Quality")
             .setDesc("Jpeg quality selection (30 to 100).")
             .addText((text) =>
@@ -305,7 +305,7 @@ export default class SettingTab extends PluginSettingTab {
             )
 
 
-            new Setting(containerEl)
+        new Setting(containerEl)
             .setName("Do not create Obsidian attachment folder (For compatibility with other plugins)")
             .setDesc("The plugin will not create an Obsidian attachments folder. This may cause the plugin to behave incorrectly. ")
             .addToggle((toggle) =>
@@ -317,6 +317,27 @@ export default class SettingTab extends PluginSettingTab {
                     })
             )
 
+        new Setting(containerEl)
+            .setName("http referer")
+            .setDesc(
+                "for image hotlink"
+            )
+            .addTextArea((text) =>
+                text.setValue(this.plugin.settings.HttpReferer).onChange(async (value) => {
+                    if (value) {
+                        try {
+                            const validJsonObject = JSON.parse(value);
+                        } catch (error) {
+                            displayError(
+                                "not a valid json string!"
+                            )
+                            return
+                        }
+                    }
+                    this.plugin.settings.HttpReferer = value
+                    await this.plugin.saveSettings()
+                })
+            )
 
         containerEl.createEl("h3", { text: "Note settings" })
 
@@ -355,23 +376,23 @@ export default class SettingTab extends PluginSettingTab {
             )
             .addText((text) =>
                 text.setValue(this.plugin.settings.includeps).onChange(async (value) => {
-                  
+
                     //Transform string to regex
                     let ExtArray = value.split("|")
-                    if (ExtArray.length >= 1){
-                       let regexconverted = trimAny(ExtArray.map((extension) => {if (trimAny(extension, [" ","|"]) !== "" ) {return  "(?<" + trimAny(extension, [" ","|"]) + ">.*\\." + trimAny(extension, [" ","|"]) + ")" }}).join("|"), [" ","|"]) 
-                   
+                    if (ExtArray.length >= 1) {
+                        let regexconverted = trimAny(ExtArray.map((extension) => { if (trimAny(extension, [" ", "|"]) !== "") { return "(?<" + trimAny(extension, [" ", "|"]) + ">.*\\." + trimAny(extension, [" ", "|"]) + ")" } }).join("|"), [" ", "|"])
 
-                    if (!safeRegex(value)) {
-                        displayError(
-                            "Unsafe regex! https://www.npmjs.com/package/safe-regex"
-                        )
-                        return
+
+                        if (!safeRegex(value)) {
+                            displayError(
+                                "Unsafe regex! https://www.npmjs.com/package/safe-regex"
+                            )
+                            return
+                        }
+                        this.plugin.settings.includepattern = regexconverted
+                        logError(regexconverted)
+                        await this.plugin.saveSettings()
                     }
-                    this.plugin.settings.includepattern = regexconverted
-                    logError(regexconverted)
-                    await this.plugin.saveSettings()
-                }
                 })
             )
 
@@ -405,10 +426,8 @@ export default class SettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings()
                     })
             )
-           
-           
-           
-            new Setting(containerEl)
+
+        new Setting(containerEl)
             .setName("Date format")
             .setDesc(
                 "Date format for ${date} variable. E.g. \
@@ -490,8 +509,8 @@ export default class SettingTab extends PluginSettingTab {
             )
 
 
-            containerEl.createEl("h3", { text: "Troubleshooting" })
-            new Setting(containerEl)
+        containerEl.createEl("h3", { text: "Troubleshooting" })
+        new Setting(containerEl)
             .setName("Debug")
             .setDesc("Enable debug output to console.")
             .addToggle((toggle) =>
